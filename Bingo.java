@@ -42,6 +42,7 @@ public class Bingo {
         FileWriter fwriter = new FileWriter(outputFile, true);
         PrintWriter printFile = new PrintWriter(fwriter);
 
+        //Writes bingo card numbers and removes any repeating numbers
         for (int c = 0; c < printCard[0].length; c++) {
             for (int r = 0; r < printCard.length; r++) {
 
@@ -61,6 +62,7 @@ public class Bingo {
             range += 15;
         }
 
+        //Prints bingo card to text file
         for (int printRow = 0; printRow < printCard.length; printRow++) {
             for (int printCol = 0; printCol < printCard[0].length; printCol++) {
 
@@ -73,10 +75,12 @@ public class Bingo {
             printFile.println("\n");
         }
 
+        //Fills array list with numbers 1-75
         for (int assign = 0; assign < 75; assign++) {
             printStream.add(assign + 1);
         }
 
+        //Randomizes stream list and prints to text file
         for (int print = 0; print < 75; print++) {
             int randomIndex = rand.nextInt(printStream.size());
             int randomNumber = printStream.get(randomIndex);
@@ -119,6 +123,7 @@ public class Bingo {
         File file = new File(inputFile);
         Scanner readFile = new Scanner(file);
 
+        //Fills empty 2-D array with bingo card values from text file
         for (int readRows = 0; readRows < card.length; readRows++) {
 
             for (int readCols = 0; readCols < card[0].length; readCols++) {
@@ -128,6 +133,7 @@ public class Bingo {
             }
         }
 
+        //Fills stream array with randomized values from text file
         for (int readStream = 0; readStream < stream.length; readStream++) {
 
             stream[readStream] = readFile.nextInt();
@@ -135,7 +141,6 @@ public class Bingo {
         }
 
         readFile.close();
-        
 
     }
 
@@ -154,6 +159,7 @@ public class Bingo {
 
         boolean gameIsWon = false;
 
+        //Empties bingo card and marks free space
         for (int falseRow = 0; falseRow < card.length; falseRow++) {
             for (int falseCol = 0; falseCol < card[0].length; falseCol++) {
 
@@ -162,11 +168,17 @@ public class Bingo {
             }
         }
         marks[2][2] = true;
-
+        
+       
+        
+        //Repeats until a 'bingo' is achieved
         while (gameIsWon == false) {
 
+            //Gets the next number in the random stream
+            gameIsWon = false;
             winningNumber = stream[drawnNumber];
 
+            //Marks the bingo card with the drawn number
             for (int markRow = 0; markRow < card.length; markRow++) {
                 for (int markCol = 0; markCol < card[0].length; markCol++) {
 
@@ -174,48 +186,56 @@ public class Bingo {
                         marks[markRow][markCol] = true;
                     }
 
-                }
+                } 
             }
 
+            //Checks for a completed row
+            int rowScore = 0;
             for (int checkRow = 0; checkRow < card.length; checkRow++) {
 
-                int rowScore = 0;
+                rowScore = 0;
                 for (int checkCol = 0; checkCol < card[0].length; checkCol++) {
 
-                    if (marks[checkRow][checkCol] = true) {
+                    if (marks[checkRow][checkCol] == true) {
                         rowScore++;
                     }
 
-                    if (rowScore == 5) {
-                        gameIsWon = true;
-                    }
+                }
 
+                if (rowScore == 5) {
+                    gameIsWon = true;
                 }
 
             }
-
+          
+            //Checks for a completed column
+            int colScore = 0;
             for (int checkCol = 0; checkCol < card[0].length; checkCol++) {
 
-                int colScore = 0;
+                colScore = 0;
+                
                 for (int checkRow = 0; checkRow < card.length; checkRow++) {
 
                     if (marks[checkRow][checkCol] == true) {
                         colScore++;
-                    }
 
-                    if (colScore == 5) {
-                        gameIsWon = true;
                     }
 
                 }
 
-            }
+                if (colScore == 5) {
+                    gameIsWon = true;
+                }
 
+            }
+          
+            //Checks for a completed forward diagnol
             int fDiagnolScore = 0;
             for (int forwardDiagnol = 0; forwardDiagnol < card.length; forwardDiagnol++) {
 
                 if (marks[forwardDiagnol][forwardDiagnol] == true) {
                     fDiagnolScore++;
+
                 }
 
                 if (fDiagnolScore == 5) {
@@ -224,11 +244,15 @@ public class Bingo {
 
             }
 
+            fDiagnolScore = 0;
+
+            //Checks for a completed backward diagnol
             int bDiagnolScore = 0;
             for (int backwardDiagnol = 0; backwardDiagnol < card.length; backwardDiagnol++) {
 
                 if (marks[backwardDiagnol][4 - backwardDiagnol] == true) {
                     bDiagnolScore++;
+
                 }
 
                 if (bDiagnolScore == 5) {
@@ -237,10 +261,13 @@ public class Bingo {
 
             }
 
+            bDiagnolScore = 0;
+
+            //Checks for the completed corners
             if (marks[0][0] && marks[0][4] && marks[4][0] && marks[4][4]) {
                 gameIsWon = true;
             }
-            
+
             drawnNumber++;
         }
 
